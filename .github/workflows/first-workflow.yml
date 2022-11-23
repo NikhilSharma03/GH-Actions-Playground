@@ -7,4 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Hello World
-        run: echo "Hello World"
+        run: |
+          echo "Hello World"
+          echo "Konnichiwa Sekai"
+      - name: Print Bye World
+        run: |
+          echo "Bye World"
+          echo "Sayonara Sekai"
