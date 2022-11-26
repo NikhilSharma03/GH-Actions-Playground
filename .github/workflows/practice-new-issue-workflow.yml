@@ -1,0 +1,13 @@
+name: "New Issue Workflow"
+
+on: [issues]
+
+jobs:
+  echo-context:
+    name: "Print Context Object"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Echo Event Name"
+        run: |
+            echo "${{ github.event_name }}"
+            echo "${{ github }}"
