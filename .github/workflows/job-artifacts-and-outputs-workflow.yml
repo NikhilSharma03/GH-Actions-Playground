@@ -27,6 +27,7 @@ jobs:
         run: npm run test
 
   build:
+    needs: test
     name: Build
     runs-on: ubuntu-latest
     defaults:
@@ -52,9 +53,6 @@ jobs:
     needs: build
     name: "Deploy"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: job-artifacts-and-outputs
     steps:
       - name: "Download artifacts"
         uses: actions/download-artifact@v3
