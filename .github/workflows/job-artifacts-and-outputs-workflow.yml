@@ -1,0 +1,54 @@
+name: "Job Artifacts and Outputs"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: job-artifacts-and-outputs
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+      
+      - name: "Setup Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      
+      - name: "Install Dep"
+        run: npm ci
+      
+      - name: "Build"
+        run: npm run build
+      
+      - name: "Upload Artifacts"
+        uses: actions/upload-artifacts@v3
+        with:
+          name: build-dir
+          path: |
+            dist
+            package.json
+  deploy:
+    needs: [ build ]
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: job-artifacts-and-outputs
+    steps:
+      - name: "Download artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: build-dir
+      
+      - name: "Echo content"
+        run: ls
+
+      - name: "Deploy"
+        run: echo "Deploying..."
