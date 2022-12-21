@@ -61,11 +61,9 @@ jobs:
       
       - name: "Output contents"
         run: ls
-
-      - run: cd assets
-
+    
       - name: "Output assets contents"
-        run: ls
+        run: cd assets; ls
 
       - name: "Deploy"
         run: echo "Deploying..."
