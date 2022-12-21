@@ -1,6 +1,7 @@
 name: "Job Artifacts and Outputs"
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
