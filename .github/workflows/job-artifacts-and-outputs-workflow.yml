@@ -33,16 +33,22 @@ jobs:
     defaults:
       run:
         working-directory: job-artifacts-and-outputs
+    outputs:
+      script-file: ${{ steps.publish.outputs.script-file }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v3
-          
+
       - name: "Install Dep"
         run: npm ci
-      
+
       - name: "Build"
         run: npm run build
-      
+
+      - name: "Publish JS filename"
+        id: publish
+        run: find dist/assets/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+
       - name: "Upload Artifacts"
         uses: actions/upload-artifact@v3
         with:
@@ -58,12 +64,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist-files
-      
+
       - name: "Output contents"
         run: ls
-    
+
       - name: "Output assets contents"
         run: cd assets; ls
+
+      - name: Output JS filename
+        run: echo "${{ needs.build.outputs.script-file }}"
 
       - name: "Deploy"
         run: echo "Deploying..."
