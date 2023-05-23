@@ -18,9 +18,10 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != "true" # If condition
         run: npm ci
       - name: Lint code
         run: npm run lint
@@ -36,15 +37,17 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != "true" # If condition
         run: npm ci
       - name: Test code
         id: run-test
         run: npm run test
+        # continue-on-error: true  # will treat it as success and the job will continue (the outcome will be failure if failed) 
       - name: Upload test report
-        if: failure() && steps.run-test.outcome == 'failure'
+        if: failure() && steps.run-test.outcome == 'failure' # will run if run-test step fails and will stop the job
         uses: actions/upload-artifact@v3
         with:
           name: test-report
@@ -62,9 +65,10 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != "true" # If condition
         run: npm ci
       - name: Build website
         id: build-website
@@ -89,3 +93,12 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  report:
+    needs: [lint, deploy]
+    if: failure() # will run if lint or deploy job fails
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: | 
+          echo "Something went wrong"
+          echo "${{ toJSON(github) }}"
