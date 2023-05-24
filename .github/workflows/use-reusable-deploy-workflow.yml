@@ -31,3 +31,13 @@ jobs:
     uses: ./.github/workflows/reusable-deploy-workflow.yml
     with:
        artifact-name: dist-files
+  # secrets:
+    #  some-secret: ${{ secrets.some-secret }}
+
+  deploy_result:
+    name: Deploy Result
+    needs: [ deploy ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print results
+        run: echo "${{ needs.deploy.outputs.result }}"

@@ -8,7 +8,14 @@ on:
         type: string
         required: true
         default: dist
-    
+  # secrets:
+    # some-secret:
+      # required: false
+    outputs:
+      result:
+        description: Deploy result
+        value: ${{ jobs.deploy.outputs.outcome }}
+
 jobs:
   download_build:
     name: Download Build
@@ -20,10 +27,15 @@ jobs:
           name: ${{ inputs.artifact-name }}
       - name: Print artifact
         run: ls
-        
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    outputs:
+      outcome: ${{ steps.step-result.outputs.step-result }}
     steps:
       - name: deploying
         run:  echo "Deploying"
+      - name: Result output
+        id: step-result
+        run: echo "step-result=success" >> $GITHUB_OUTPUT
