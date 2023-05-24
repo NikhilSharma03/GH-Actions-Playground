@@ -27,6 +27,6 @@ jobs:
 
   deploy:
     name: Deploy
-    uses: ./.github/workflow/reusable-deploy-workflow.yml
+    uses: ./.github/workflows/reusable-deploy-workflow.yml
     with:
        artifact-name: dist-files
