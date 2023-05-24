@@ -23,7 +23,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dist-files
-          path: dist
+          path: ./controlling-workflow-and-job-execution/dist
 
   deploy:
     name: Deploy
