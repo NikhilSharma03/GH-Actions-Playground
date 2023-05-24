@@ -1,0 +1,32 @@
+name: Use Reusable Deploy Workflow
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    defaults:
+      run:
+        working-directory: controlling-workflow-and-job-execution
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dep 
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist
+
+  deploy:
+    name: Deploy
+    uses: ./.github/workflow/reusable-deploy-workflow.yml
+    with:
+       artifact-name: dist-files
