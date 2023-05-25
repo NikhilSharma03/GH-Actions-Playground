@@ -25,6 +25,7 @@ jobs:
         run: npm ci
       - name: Lint code
         run: npm run lint
+
   test:
     runs-on: ubuntu-latest
     defaults:
@@ -51,7 +52,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-report
-          path: test.json
+          path: ./controlling-workflow-and-job-execution/test.json
+
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -78,6 +80,7 @@ jobs:
         with:
           name: dist-files
           path: dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -93,6 +96,7 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  
   report:
     needs: [lint, deploy]
     if: failure() # will run if lint or deploy job fails
