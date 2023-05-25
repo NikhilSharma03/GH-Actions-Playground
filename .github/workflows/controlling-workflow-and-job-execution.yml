@@ -84,9 +84,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: controlling-workflow-and-job-execution
     steps:
       - name: Get build artifacts
         uses: actions/download-artifact@v3
