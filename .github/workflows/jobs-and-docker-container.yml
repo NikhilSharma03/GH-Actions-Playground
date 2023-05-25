@@ -16,12 +16,14 @@ jobs:
         working-directory: jobs-and-docker-container
 
     runs-on: ubuntu-latest
-    container: # runs the steps in container which is hosted on the runner
-      image: node:16
+    # container: # runs the steps in container which is hosted on the runner
+      # image: node:16
 
     services: # run alongside this job (will shutdown once job finished)
       mongodb:
         image: mongo
+        ports:  # if running job in runner (to expose this service)
+          - 27017:27017
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
@@ -29,7 +31,8 @@ jobs:
     environment: docker-container
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb
-      MONGODB_CLUSTER_ADDRESS: mongodb # if running job in container (to connect with mongodb service)
+      # MONGODB_CLUSTER_ADDRESS: mongodb # if running job in container (to connect with mongodb service)
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017 # if running job in runner
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
       PORT: 8080
