@@ -6,14 +6,14 @@ runs:
   steps:
     - name: Cache dependencies
       id: cache
+      working-directory: ./custom-github-actions
       uses: actions/cache@v3
       with:
         path: node_modules
-        key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+        key: deps-node-modules-${{ hashFiles('package-lock.json') }}
 
     - name: Install dependencies
+      working-directory: ./custom-github-actions
       if: steps.cache.outputs.cache-hit != 'true'
-      run: |
-        ls
-        npm ci
+      run: npm ci
       shell: bash
