@@ -10,7 +10,7 @@ inputs:
 outputs:
   used-cache:
     description: Whether cache was used
-    value: test-output
+    value: ${{ steps.install-dep.outputs.cache-hit }}
 
 runs:
   using: composite
@@ -23,10 +23,10 @@ runs:
         key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
 
     - name: Install dependencies
-      id: install
+      id: install-dep
       if: steps.cache.outputs.cache-hit != 'true'
       working-directory: ${{ inputs.path }}
       run: |
         npm ci
-        echo "cache=true" >> $GITHUB_OUTPUT
+        echo "cache-hit=true" >> $GITHUB_OUTPUT
       shell: bash
