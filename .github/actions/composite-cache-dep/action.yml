@@ -13,5 +13,7 @@ runs:
 
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: npm ci
+      run: |
+        ls
+        npm ci
       shell: bash
