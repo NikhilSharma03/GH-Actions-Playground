@@ -1,4 +1,4 @@
-name: Deployment
+name: Custom Github Actions
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Get and Cache dependencies
-        uses: ./github/actions/composite-cache-dep
+        uses: ./.github/actions/composite-cache-dep
       - name: Lint code
         run: npm run lint
 
@@ -28,7 +28,7 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Get and Cache dependencies
-        uses: ./github/actions/composite-cache-dep
+        uses: ./.github/actions/composite-cache-dep
       - name: Test code
         id: run-tests
         run: npm run test
@@ -49,7 +49,7 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Get and Cache dependencies
-        uses: ./github/actions/composite-cache-dep
+        uses: ./.github/actions/composite-cache-dep
       - name: Build website
         run: npm run build
       - name: Upload artifacts
