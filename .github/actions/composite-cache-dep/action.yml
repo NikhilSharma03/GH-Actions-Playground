@@ -28,5 +28,5 @@ runs:
       working-directory: ${{ inputs.path }}
       run: |
         npm ci
-        echo "cache='true'" >> $GITHUB_OUTPUT
+        echo "cache=true" >> $GITHUB_OUTPUT
       shell: bash
