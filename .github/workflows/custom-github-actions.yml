@@ -1,0 +1,80 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    defaults:
+      run:
+        working-directory: custom-github-actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Get and Cache dependencies
+        uses: ./github/actions/composite-cache-dep
+      - name: Lint code
+        run: npm run lint
+
+  test:
+    defaults:
+      run:
+        working-directory: custom-github-actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Get and Cache dependencies
+        uses: ./github/actions/composite-cache-dep
+      - name: Test code
+        id: run-tests
+        run: npm run test
+      - name: Upload test report
+        if: failure() && steps.run-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: ./custom-github-actions/test.json
+
+  build:
+    needs: test
+    defaults:
+      run:
+        working-directory: custom-github-actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Get and Cache dependencies
+        uses: ./github/actions/composite-cache-dep
+      - name: Build website
+        run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: ./custom-github-actions/dist
+
+  deploy:
+    defaults:
+      run:
+        working-directory: custom-github-actions
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Get build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          path: ./dist
+      - name: Output contents
+        run: |
+          ls
+          pwd
+      - name: Deploy site
+        run: echo "Deploying..."
