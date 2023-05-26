@@ -15,9 +15,12 @@ jobs:
       - name: Get code
         uses: actions/checkout@v3
       - name: Get and Cache dependencies
+        id: cache-dep
         uses: ./.github/actions/composite-cache-dep
         with:
           path: custom-github-actions
+      - name: Output info
+        run: echo "${{ steps.cache-dep.outputs.used-cache }}"
       - name: Lint code
         run: npm run lint
 
