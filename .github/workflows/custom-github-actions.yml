@@ -16,6 +16,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Get and Cache dependencies
         uses: ./.github/actions/composite-cache-dep
+        with:
+          path: custom-github-actions
       - name: Lint code
         run: npm run lint
 
@@ -29,6 +31,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Get and Cache dependencies
         uses: ./.github/actions/composite-cache-dep
+        with:
+          path: custom-github-actions
       - name: Test code
         id: run-tests
         run: npm run test
@@ -50,6 +54,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Get and Cache dependencies
         uses: ./.github/actions/composite-cache-dep
+        with:
+          path: custom-github-actions
       - name: Build website
         run: npm run build
       - name: Upload artifacts
@@ -59,9 +65,6 @@ jobs:
           path: ./custom-github-actions/dist
 
   deploy:
-    defaults:
-      run:
-        working-directory: custom-github-actions
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -73,8 +76,6 @@ jobs:
           name: dist-files
           path: ./dist
       - name: Output contents
-        run: |
-          ls
-          pwd
+        run: ls
       - name: Deploy site
         run: echo "Deploying..."
